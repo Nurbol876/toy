@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Элнур & Нуржамал - Үйлөнүү үлпөтү</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #FAF8F5;
+            --primary-gold: #D4AF37;
+            --dark-gold: #AA7C11;
+            --light-gold: #F3E5AB;
+            --text-dark: #2C2C2C;
+            --text-muted: #666666;
+            --rose-accent: #E8C3C8;
+            --white: #FFFFFF;
+            --shadow-soft: 0 10px 30px rgba(0,0,0,0.05);
+            --shadow-medium: 0 15px 35px rgba(212, 175, 55, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .cursive {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        /* ------------------ ENVELOPE OVERLAY ------------------ */
+        #envelope-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(250, 248, 245, 0.98);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            background: #f0e6d2;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 1px solid var(--primary-gold);
+            perspective: 1000px;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 110px solid #e2d1b0;
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            z-index: 2;
+        }
+
+        .wax-seal {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #D4AF37, #AA7C11);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 3;
+            transition: transform 0.3s ease;
+        }
+
+        .envelope-wrapper:hover .wax-seal {
+            transform: scale(1.1);
+        }
+
+        .envelope-text {
+            margin-top: 50px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            color: var(--text-dark);
+        }
+
+        /* ------------------ MUSIC PLAYER ------------------ */
+        .music-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 100;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 2px solid var(--primary-gold);
+            color: var(--primary-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-medium);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .music-btn.playing {
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ------------------ HERO SECTION ------------------ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            background: linear-gradient(rgba(250, 248, 245, 0.7), rgba(250, 248, 245, 0.9)), 
+                        url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80') center/cover no-repeat;
+        }
+
+        .hero-names {
+            font-size: 3.5rem;
+            color: var(--text-dark);
+            margin: 15px 0;
+            font-weight: 600;
+        }
+
+        .hero-names span {
+            color: var(--primary-gold);
+            font-family: 'Great Vibes', cursive;
+            font-size: 4rem;
+        }
+
+        .sub-title {
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            color: var(--dark-gold);
+            margin-bottom: 10px;
+        }
+
+        /* ------------------ COUNTDOWN ------------------ */
+        .timer-container {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .timer-box {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            padding: 15px;
+            border-radius: 8px;
+            min-width: 70px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .timer-num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-gold);
+        }
+
+        .timer-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        /* ------------------ DETAILS SECTION ------------------ */
+        .section-padding {
+            padding: 80px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 40px 25px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid #f0e6d2;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--primary-gold);
+            margin-bottom: 20px;
+        }
+
+        .hosts-title {
+            font-size: 1.8rem;
+            color: var(--dark-gold);
+            margin-bottom: 10px;
+        }
+
+        .btn-action {
+            display: inline-block;
+            background: linear-gradient(135deg, #D4AF37, #AA7C11);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            letter-spacing: 1px;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* ------------------ FORM & WISHES ------------------ */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-gold);
+        }
+
+        .wishes-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .wish-item {
+            background: #faf8f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--primary-gold);
+        }
+
+        .wish-name {
+            font-weight: 600;
+            color: var(--dark-gold);
+            font-size: 0.95rem;
+        }
+
+        .wish-text {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-top: 4px;
+        }
+
+        /* ------------------ FOOTER ------------------ */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--white);
+            border-top: 1px solid #f0e6d2;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ENVELOPE OVERLAY -->
+    <div id="envelope-overlay">
+        <div class="envelope-wrapper" onclick="openEnvelope()">
+            <div class="envelope-flap" id="flap"></div>
+            <div class="wax-seal">
+                <i class="fa-solid fa-heart"></i>
+            </div>
+            <div class="envelope-text">
+                <strong>Элнур & Нуржамал</strong><br>
+                <span style="font-size: 0.9rem; color: #777;">Чакырууну ачуу үчүн басыңыз</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- BACKGROUND AUDIO -->
+    <audio id="bg-music" loop src="https://assets.mixkit.co/music/preview/mixkit-romantic-wedding-391.mp3"></audio>
+    <button class="music-btn" id="music-btn" onclick="toggleMusic()">
+        <i class="fa-solid fa-music"></i>
+    </button>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div data-aos="fade-down" class="sub-title">Үйлөнүү үлпөт чакыруусу</div>
+        <h1 data-aos="zoom-in" class="hero-names">Элнур <span>&</span> Нуржамал</h1>
+        <p data-aos="fade-up" style="font-style: italic; color: #555;">«Сүйүү — бул эки жүрөктүн бир согушу»</p>
+
+        <!-- COUNTDOWN -->
+        <div class="timer-container" data-aos="fade-up" data-aos-delay="200">
+            <div class="timer-box">
+                <div class="timer-num" id="days">00</div>
+                <div class="timer-label">Күн</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-num" id="hours">00</div>
+                <div class="timer-label">Саат</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-num" id="minutes">00</div>
+                <div class="timer-label">Мүнөт</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-num" id="seconds">00</div>
+                <div class="timer-label">Секунд</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EVENT DETAILS -->
+    <section class="section-padding">
+        <!-- HOSTS & INVITATION -->
+        <div class="card" data-aos="fade-up">
+            <div class="card-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+            <h2 class="serif-font" style="font-size: 2rem; margin-bottom: 15px;">Урматтуу коноктор!</h2>
+            <p style="line-height: 1.8; color: #555;">
+                Сиздерди уулубуз <strong>Элнур</strong> менен келинибиз <strong>Нуржамалдын</strong> үйлөнүү тоюна арналган салтанатка катышып, кадырлуу коногубуз болуп кетүүгө чакырабыз!
+            </p>
+            <hr style="border: 0; height: 1px; background: #e2d1b0; margin: 25px 0;">
+            <div class="hosts-title">Той ээлери:</div>
+            <p style="font-size: 1.2rem; font-weight: 600; color: var(--text-dark);">Чакбу & Жениш</p>
+        </div>
+
+        <!-- DATE & LOCATION -->
+        <div class="card" data-aos="fade-up">
+            <div class="card-icon"><i class="fa-solid fa-calendar-check"></i></div>
+            <h2 class="serif-font" style="font-size: 2rem; margin-bottom: 10px;">Датасы жана Убактысы</h2>
+            <p style="font-size: 1.3rem; font-weight: 600; color: var(--dark-gold);">1-Ноябрь, 2026-жыл</p>
+            <p style="font-size: 1.1rem; color: #555; margin-top: 5px;">Саат: 16:00</p>
+
+            <div style="margin-top: 35px;">
+                <div class="card-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <h2 class="serif-font" style="font-size: 2rem; margin-bottom: 10px;">Дареги</h2>
+                <p style="font-size: 1.1rem; color: var(--text-dark);">Кара-Көл шаары</p>
+                <p style="font-size: 1.2rem; font-weight: 600; color: var(--dark-gold); margin-top: 5px;">«Кара Кол» кафеси</p>
+                
+                <a href="https://2gis.kg/kara-kul/firm/70000001083977152?m=72.705671%2C41.636771%2F17.15" target="_blank" class="btn-action">
+                    <i class="fa-solid fa-map-location-dot"></i> Картадан көрүү
+                </a>
+            </div>
+        </div>
+
+        <!-- RSVP FORM -->
+        <div class="card" data-aos="fade-up">
+            <div class="card-icon"><i class="fa-solid fa-clipboard-user"></i></div>
+            <h2 class="serif-font" style="font-size: 2rem; margin-bottom: 10px;">Тойго келериңизди ырастаңыз</h2>
+            <form id="rsvp-form" onsubmit="submitRSVP(event)">
+                <div class="form-group">
+                    <label>Аты-жөнүңүз:</label>
+                    <input type="text" class="form-control" id="guest-name" required placeholder="Мис: Асан Үсөнов">
+                </div>
+                <div class="form-group">
+                    <label>Келе аласызбы?</label>
+                    <select class="form-control" id="guest-status">
+                        <option value="Ооба, катышам">Ооба, буйруса баратам</option>
+                        <option value="Тилекке каршы бара албайм">Тилекке каршы бара албайм</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-action" style="width: 100%;">Жөнөтүү</button>
+            </form>
+        </div>
+
+        <!-- WISHING WALL -->
+        <div class="card" data-aos="fade-up">
+            <div class="card-icon"><i class="fa-solid fa-heart-circle-plus"></i></div>
+            <h2 class="serif-font" style="font-size: 2rem; margin-bottom: 10px;">Ак каалоо-тилектер</h2>
+            <form id="wish-form" onsubmit="addWish(event)">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="wish-author" placeholder="Атыңыз" required>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" id="wish-text" rows="3" placeholder="Жаштарга каалоо-тилегиңизди жазыңыз..." required></textarea>
+                </div>
+                <button type="submit" class="btn-action" style="width: 100%;">Каалоо тилек калтыруу</button>
+            </form>
+
+            <div class="wishes-list" id="wishes-container">
+                <div class="wish-item">
+                    <div class="wish-name">Керез & Жениш</div>
+                    <div class="wish-text">Ак жолуңар ачык болсун, бактылуу түгөйлөрдөн болушуңарды каалайбыз!</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <audio id="bg-music" loop src="./kalen_raev_-_tojj_yry_zhany_2023_getmp3.pro_.mp3"></audio>
+    <!-- FOOTER -->
+    <footer>
+        <p>Элнур & Нуржамалдын той салтанаты — 2026</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        // Envelope Animation
+        function openEnvelope() {
+            document.getElementById('flap').style.transform = 'rotateX(180deg)';
+            setTimeout(() => {
+                const overlay = document.getElementById('envelope-overlay');
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    playMusic();
+                }, 1000);
+            }, 600);
+        }
+
+        // Music Controls
+        const music = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-btn');
+
+        function playMusic() {
+            music.play().then(() => {
+                musicBtn.classList.add('playing');
+            }).catch(() => {});
+        }
+
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                musicBtn.classList.add('playing');
+            } else {
+                music.pause();
+                musicBtn.classList.remove('playing');
+            }
+        }
+
+        // Countdown Timer
+        const weddingDate = new Date('November 1, 2026 16:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance < 0) {
+                document.getElementById('days').innerText = "00";
+                document.getElementById('hours').innerText = "00";
+                document.getElementById('minutes').innerText = "00";
+                document.getElementById('seconds').innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = days < 10 ? '0' + days : days;
+            document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // RSVP Handler
+        function submitRSVP(e) {
+            e.preventDefault();
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            alert('Рахмат! Жообуңуз кабыл алынды.');
+            document.getElementById('rsvp-form').reset();
+        }
+
+        // Wish Handler
+        function addWish(e) {
+            e.preventDefault();
+            const name = document.getElementById('wish-author').value;
+            const text = document.getElementById('wish-text').value;
+
+            const wishItem = document.createElement('div');
+            wishItem.className = 'wish-item';
+            wishItem.innerHTML = `<div class="wish-name">${name}</div><div class="wish-text">${text}</div>`;
+
+            const container = document.getElementById('wishes-container');
+            container.insertBefore(wishItem, container.firstChild);
+
+            confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+            document.getElementById('wish-form').reset();
+        }
+    </script>
+</body>
+</html>
